@@ -9,7 +9,7 @@ const props = defineProps({
   // Configuration props
   showEndingNumberButtons: {
     type: Boolean,
-    default: false,
+    default: true,
   },
   totalItems: {
     type: Number,

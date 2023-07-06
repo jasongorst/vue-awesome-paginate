@@ -9,7 +9,7 @@ import { ref } from "vue";
 import VueAwesomePaginate from "../src/components/vue-awesome-paginate.vue";
 
 describe("First and Last Buttons", () => {
-  it("should render the ending breakpoint button only when pagination is at the very beggining", () => {
+  it("should render the ending breakpoint button only when pagination is at the very beginning", () => {
     const currentPage = ref(1);
     const wrapper = mount(VueAwesomePaginate, {
       propsData: {
