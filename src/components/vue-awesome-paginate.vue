@@ -7,6 +7,10 @@ import { computed } from "vue";
 // -------------------- //
 const props = defineProps({
   // Configuration props
+  showEndingNumberButtons: {
+    type: Boolean,
+    default: false,
+  },
   totalItems: {
     type: Number,
     required: true,
@@ -75,11 +79,11 @@ const props = defineProps({
     type: String as PropType<"link" | "button">,
     default: "button",
     validator: (value: string) => {
-      const validTypess = ["link", "button"];
+      const validTypes = ["link", "button"];
       const message =
         "type attribute must be one of the following: " +
-        validTypess.join(", ");
-      if (validTypess.indexOf(value) === -1) {
+        validTypes.join(", ");
+      if (validTypes.indexOf(value) === -1) {
         console.error(message);
         throw new TypeError(message);
       }
@@ -133,7 +137,7 @@ const props = defineProps({
     type: String,
     default: "...",
   },
-  endingBreakpointButtonContent: {
+  endingBreakpointContent: {
     type: String,
     default: "...",
   },
@@ -195,7 +199,7 @@ const props = defineProps({
     type: String,
     default: "starting-breakpoint-button",
   },
-  endingBreakPointButtonClass: {
+  endingBreakpointButtonClass: {
     type: String,
     default: "ending-breakpoint-button",
   },
@@ -429,12 +433,10 @@ const lastButtonIfCondition = computed(() => {
   );
 });
 const firstPageButtonIfCondition = computed(() => {
-  if (currentPageRef.value === 1) return false;
-  return true;
+  return currentPageRef.value !== 1;
 });
 const lastPageButtonIfCondition = computed(() => {
-  if (currentPageRef.value === totalPages.value) return false;
-  return true;
+  return currentPageRef.value !== totalPages.value;
 });
 
 // --------------------------- //
@@ -540,7 +542,7 @@ if (props.type === "link" && !props.linkUrl.includes("[page]")) {
     </li>
 
     <!-- First Button before Starting Breakpoint Button -->
-    <li v-if="showBreakpointButtons && firstButtonIfCondition">
+    <li v-if="showEndingNumberButtons && showBreakpointButtons && firstButtonIfCondition">
       <component
         :is="type === 'button' ? 'button' : 'a'"
         :href="navigationHandler(isRtl ? totalPages : 1)"
@@ -636,7 +638,7 @@ if (props.type === "link" && !props.linkUrl.includes("[page]")) {
         "
         :disabled="disableBreakpointButtons || disablePagination"
         :class="[
-          endingBreakPointButtonClass,
+          endingBreakpointButtonClass,
           paginateButtonsClass,
           disableBreakpointButtons || disablePagination
             ? `${disabledPaginateButtonsClass} ${disabledBreakPointButtonClass}`
@@ -644,13 +646,13 @@ if (props.type === "link" && !props.linkUrl.includes("[page]")) {
         ]"
       >
         <slot name="ending-breakpoint-button">
-          {{ endingBreakpointButtonContent }}
+          {{ endingBreakpointContent }}
         </slot>
       </component>
     </li>
 
-    <!-- Last Button after Ending Breakingpoint Button-->
-    <li v-if="showBreakpointButtons && lastButtonIfCondition">
+    <!-- Last Button after Ending Breakpoint Button-->
+    <li v-if="showEndingNumberButtons && showBreakpointButtons && lastButtonIfCondition">
       <component
         :is="type === 'button' ? 'button' : 'a'"
         :href="navigationHandler(isRtl ? 1 : totalPages)"
